@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamp('due_date');
             $table->enum('status', ['pending', 'is_progress', 'completed']);
             $table->string('image_path')->nullable();
-            $table->foreignId('created_by')->constrained('users');
-            $table->foreignId('updated_by')->constrained('users');
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('updated_by')->constrained('users')->cascadeOnUpdate();
             $table->timestamp('created_at');
             $table->timestamp('updated_at');
         });
