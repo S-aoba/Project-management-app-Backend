@@ -47,4 +47,38 @@ class Project extends Model
     
         return $new_project;
     }
+
+    static function member(int $id)
+    {
+        $role_name = 'member';
+        $role = DB::table('roles')
+                    ->where('name', $role_name)
+                    ->first();
+
+        $members = ProjectUser::where('project_id', $id)
+                    ->where('role_id', $role->id)
+                    ->with(['user.role' => function ($query) {
+                        $query->select('name');
+                    }])
+                    ->get();
+
+        return $members;
+    }
+
+    static function admin(int $id)
+    {
+        $role_name = 'admin';
+        $role = DB::table('roles')
+                    ->where('name', $role_name)
+                    ->first();
+
+        $admin = ProjectUser::where('project_id', $id)
+                    ->where('role_id', $role->id)
+                    ->with(['user.role' => function ($query) {
+                        $query->select('name');
+                    }])
+                    ->get();
+
+        return $admin;
+    }
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Type\Integer;
 
 class ProjectController extends Controller
 {
@@ -12,15 +15,12 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $projects = Project::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response()->json([
+            'status' => true,
+            'projects' => $projects
+        ]);
     }
 
     /**
@@ -28,23 +28,41 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $this->validateProjectInfo($request);
+
+        $project = Project::createProject($validatedData);
+        
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Project created Successfully!',
+            'project' => $project
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(int $id)
     {
-        //
-    }
+        // TODO: もっといいバリデーションの仕方があるか調べる
+        $project_id = ['id' => $id];
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project)
-    {
-        //
+        Validator::validate($project_id, [
+            'id' => 'required|int'
+        ]);
+
+        $project = Project::findOrfail($id);
+
+        $members = Project::member($id);
+        $admin = Project::admin($id);
+
+        return response()->json([
+            'status' => true,
+            'project' => $project,
+            'admin' => $admin,
+            'member' => $members
+        ]);
     }
 
     /**
@@ -61,5 +79,16 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         //
+    }
+
+    private function validateProjectInfo(Request $req)
+    {
+        return $req->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'required|date',
+            'status' => 'required|string',
+            'image_path' => 'nullable|string'
+        ]);
     }
 }
