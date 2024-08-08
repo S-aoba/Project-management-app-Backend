@@ -48,37 +48,15 @@ class Project extends Model
         return $new_project;
     }
 
-    static function member(int $id)
+    public function users ()
     {
-        $role_name = 'member';
-        $role = DB::table('roles')
-                    ->where('name', $role_name)
-                    ->first();
-
-        $members = ProjectUser::where('project_id', $id)
-                    ->where('role_id', $role->id)
-                    ->with(['user.role' => function ($query) {
-                        $query->select('name');
-                    }])
-                    ->get();
-
-        return $members;
+        // 関係: Project 多対多 User
+        return $this->belongsToMany(User::class, 'project_users');
     }
 
-    static function admin(int $id)
+    public function roles ()
     {
-        $role_name = 'admin';
-        $role = DB::table('roles')
-                    ->where('name', $role_name)
-                    ->first();
-
-        $admin = ProjectUser::where('project_id', $id)
-                    ->where('role_id', $role->id)
-                    ->with(['user.role' => function ($query) {
-                        $query->select('name');
-                    }])
-                    ->get();
-
-        return $admin;
+        // 関係: Project 多対多 Role
+        return $this->belongsToMany(Role::class, 'project_users');
     }
 }

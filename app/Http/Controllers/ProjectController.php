@@ -43,26 +43,12 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $id)
+    public function show(Request $request, Project $project)
     {
-        // TODO: もっといいバリデーションの仕方があるか調べる
-        $project_id = ['id' => $id];
-
-        Validator::validate($project_id, [
-            'id' => 'required|int'
-        ]);
-
-        $project = Project::findOrfail($id);
-
-        $members = Project::member($id);
-        $admin = Project::admin($id);
-
-        return response()->json([
-            'status' => true,
-            'project' => $project,
-            'admin' => $admin,
-            'member' => $members
-        ]);
+        // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
+        return $project->load(['users.roles' => function($query) use ($project) {
+            $query->where('project_id', $project->id)->select('name');
+        }]);
     }
 
     /**

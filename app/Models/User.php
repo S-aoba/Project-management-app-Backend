@@ -45,8 +45,15 @@ class User extends Authenticatable
         ];
     }
 
-    public function role()
+    public function projects ()
     {
+        // 関係: User 多対多 Project
+        return $this->belongsToMany(Project::class, 'project_users');
+    }
+
+    public function roles ()
+    {
+        // 関係: User 多対多 Role
         return $this->belongsToMany(Role::class, 'project_users');
     }
 }
