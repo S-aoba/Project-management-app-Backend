@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Ramsey\Uuid\Type\Integer;
 
 class ProjectController extends Controller
 {
@@ -27,13 +25,10 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        $validatedData = $this->validateProjectInfo($request);
-
-        $project = Project::createProject($validatedData);
+        $project = Project::createProject($request);
         
-
         return response()->json([
             'status' => true,
             'message' => 'Project created Successfully!',
@@ -85,6 +80,7 @@ class ProjectController extends Controller
         
     }
 
+    // TODO: UpdateProjectRequestクラスを作ったら削除すること
     private function validateProjectInfo(Request $req)
     {
         return $req->validate([

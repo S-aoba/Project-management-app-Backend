@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\StoreProjectRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class Project extends Model
         'updated_by'
     ];
 
-    static function createProject(array $validatedData) {
+    static function createProject(StoreProjectRequest $validatedData) {
         $new_project = Project::create([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
