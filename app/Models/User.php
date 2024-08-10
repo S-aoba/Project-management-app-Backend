@@ -30,6 +30,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'pivot'
     ];
 
     /**
@@ -43,5 +44,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function projects ()
+    {
+        // 関係: User 多対多 Project
+        return $this->belongsToMany(Project::class, 'project_users');
+    }
+
+    public function roles ()
+    {
+        // 関係: User 多対多 Role
+        return $this->belongsToMany(Role::class, 'project_users');
     }
 }
