@@ -11,4 +11,4 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 // Project CRUD
 // Read: All Project, Detail Project, User Projects
 
-Route::apiResource('/project', ProjectController::class);
+Route::apiResource('/project', ProjectController::class)->middleware(['auth:sanctum']);
