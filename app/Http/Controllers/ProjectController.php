@@ -53,16 +53,12 @@ class ProjectController extends Controller
      */
     public function update(updateProjectRequest $request, Project $project)
     {
-        $validatedData = $this->validateProjectInfo($request);
-
-        $project->update($validatedData);
-        $project->save();
+        $project->update($request->all());
 
         return response()->json([
             'status' => true,
             'message' => 'Project updated Successfully!'
         ], 200);
-
     }
 
     /**
