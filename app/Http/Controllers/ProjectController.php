@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\updateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -50,18 +51,14 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(updateProjectRequest $request, Project $project)
     {
-        $validatedData = $this->validateProjectInfo($request);
-
-        $project->update($validatedData);
-        $project->save();
+        $project->update($request->all());
 
         return response()->json([
             'status' => true,
             'message' => 'Project updated Successfully!'
         ], 200);
-
     }
 
     /**

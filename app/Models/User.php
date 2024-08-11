@@ -57,4 +57,13 @@ class User extends Authenticatable
         // 関係: User 多対多 Role
         return $this->belongsToMany(Role::class, 'project_users');
     }
+
+    public function isAdmin(Project $project) {        
+        
+        $role = $project->roles[0]->name;
+
+        if($role === 'admin') return true;
+
+        return false;
+    }
 }
