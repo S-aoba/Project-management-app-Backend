@@ -76,20 +76,4 @@ class ProjectController extends Controller
         }
         
     }
-
-    // TODO: UpdateProjectRequestクラスを作ったら削除すること
-    private function validateProjectInfo(Request $req)
-    {
-        return $req->validate([
-            'name' => 'required|string|max:255|unique:projects,name', 
-            'description' => 'nullable|string',
-            'due_date' => 'required|date|after:tomorrow',
-            'status' => [Rule::enum('pending', 'is_progress', 'completed')],
-            'image_path' => 'nullable|string', 
-        ], [
-            'name.unique' => 'プロジェクト名は既に存在します。',
-            'due_date.after_today' => '締め切り日は今日以降にしてください。',
-            'status' => '許可された値ではありません。'
-        ]);
-    }
 }
