@@ -49,15 +49,21 @@ class Project extends Model
         return $new_project;
     }
 
-    public function users ()
+    public function users()
     {
         // 関係: Project 多対多 User
         return $this->belongsToMany(User::class, 'project_users');
     }
 
-    public function roles ()
+    public function roles()
     {
         // 関係: Project 多対多 Role
         return $this->belongsToMany(Role::class, 'project_users');
+    }
+
+    public function tasks()
+    {
+        // 関係: Project 一対多 Task
+        return $this->hasMany(Task::class);
     }
 }
