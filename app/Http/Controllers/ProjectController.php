@@ -43,9 +43,14 @@ class ProjectController extends Controller
     public function show(Request $request, Project $project)
     {
         // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
-        return $project->load(['users.roles' => function($query) use ($project) {
+        $project = $project->load(['users.roles' => function($query) use ($project) {
             $query->where('project_id', $project->id)->select('name');
-        }]);
+        }, 'tasks']);
+
+        return response()->json([
+            'status' => true,
+            'data' => $project
+        ], 200);
     }
 
     /**
