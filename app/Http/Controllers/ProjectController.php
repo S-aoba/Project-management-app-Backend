@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\updateProjectRequest;
 use App\Models\Project;
+use App\Models\ProjectUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -80,5 +82,23 @@ class ProjectController extends Controller
             ], 200);    
         }
         
+    }
+
+
+    public function inviteAsMember(Request $request, int $projectId)
+    {
+        
+        $userId = $request->user_id;
+        
+        ProjectUser::create([
+            'project_id' => $projectId,
+            'user_id' => $userId,
+            'role_id' => 2,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'User invited Successfully!'
+        ]);
     }
 }
