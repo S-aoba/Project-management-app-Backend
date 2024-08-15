@@ -10,11 +10,11 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Project CRUD
-// Read: All Project, Detail Project, User Projects
 
+// Project
 Route::apiResource('/project', ProjectController::class)->middleware(['auth:sanctum']);
 Route::middleware(['auth:sanctum'])->get('/user/{user_id}/projects', [UserController::class, 'fetchUserProject']);
+Route::middleware(['auth:sanctum'])->post('/project/{project_id}/members', [ProjectController::class, 'inviteAsMember']);
 
 // Task
 Route::apiResource('/task', TaskController::class)->middleware(['auth:sanctum']);
