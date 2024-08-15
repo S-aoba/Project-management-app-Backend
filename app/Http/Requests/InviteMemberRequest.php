@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\ProjectUser;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class InviteMemberRequest extends FormRequest
 {
@@ -11,6 +14,34 @@ class InviteMemberRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        // アクションをするユーザーがProjectのAdminであること
+        $userId = Auth::id();
+        $projectId = $this->route('project_id');
+
+        $isAdmin = ProjectUser::where('project_id', $projectId)
+                            ->where('user_id', $userId)
+                            ->where('role_id', 1)
+                            ->exists();
+
+        if(!$isAdmin) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'この操作は管理者のみが行うことができます。',
+            ], 422));
+        }
+
+        // JoinするユーザーがPtojectには未参加であること
+        $joinUserId = $this->input('user_id');
+        
+        $isJoinedProject = ProjectUser::where('project_id', $projectId)
+                                    ->where('user_id', $joinUserId)
+                                    ->exists();
+
+        if($isJoinedProject) {
+            throw new HttpResponseException(response()->json([
+                'message' => '招待されたユーザーは既にプロジェクトに参加しています。',
+            ], 422));
+        }
+
         return true;
     }
 
