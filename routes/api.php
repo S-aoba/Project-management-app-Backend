@@ -15,6 +15,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::apiResource('/project', ProjectController::class)->middleware(['auth:sanctum']);
 Route::middleware(['auth:sanctum'])->get('/user/{user_id}/projects', [UserController::class, 'fetchUserProject']);
 Route::middleware(['auth:sanctum'])->post('/project/{project_id}/members', [ProjectController::class, 'inviteAsMember']);
+Route::middleware(['auth:sanctum'])->delete('/project/{project_id}/member/{user_id}', [ProjectController::class, 'removeMember']);
 
 // Task
 Route::apiResource('/task', TaskController::class)->middleware(['auth:sanctum']);
