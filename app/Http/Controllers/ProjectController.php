@@ -106,8 +106,18 @@ class ProjectController extends Controller
 
     public function removeMember(RemoveMemberRequest $request)
     {
-        print($request);
+        $projectId = $request->projectId();
+        $userId = $request->userId();
+        
+        $res = ProjectUser::where('project_id', $projectId)
+                        ->where('user_id', $userId)
+                        ->delete();
 
-        return '';
+        if($res) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Member deleted Successfully!'
+            ], 200);
+        }
     }
 }
