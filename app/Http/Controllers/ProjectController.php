@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\updateProjectRequest;
 use App\Models\Project;
@@ -85,7 +86,7 @@ class ProjectController extends Controller
     }
 
 
-    public function inviteAsMember(Request $request, int $projectId)
+    public function inviteAsMember(InviteMemberRequest $request, int $projectId)
     {
         
         $userId = $request->user_id;
