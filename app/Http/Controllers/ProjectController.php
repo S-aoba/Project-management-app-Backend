@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InviteMemberRequest;
+use App\Http\Requests\RemoveMemberRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\updateProjectRequest;
 use App\Models\Project;
@@ -101,5 +102,12 @@ class ProjectController extends Controller
             'status' => true,
             'message' => 'User invited Successfully!'
         ]);
+    }
+
+    public function removeMember(RemoveMemberRequest $request)
+    {
+        print($request);
+
+        return '';
     }
 }
