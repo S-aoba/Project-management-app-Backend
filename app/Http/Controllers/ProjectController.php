@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangeRoleRequest;
 use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\RemoveMemberRequest;
 use App\Http\Requests\StoreProjectRequest;
@@ -119,5 +120,9 @@ class ProjectController extends Controller
                 'message' => 'Member deleted Successfully!'
             ], 200);
         }
+    }
+
+    public function changeOfRole(ChangeRoleRequest $request) {
+        return 'change role';
     }
 }
