@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangeRoleRequest;
 use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\RemoveMemberRequest;
+use App\Http\Requests\ShowProjectRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\updateProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
@@ -25,7 +23,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'status' => true,
-            'projects' => $projects
+            'data' => $projects
         ]);
     }
 
@@ -39,14 +37,14 @@ class ProjectController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Project created Successfully!',
-            'project' => $project
+            'data' => $project
         ], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Project $project)
+    public function show(ShowProjectRequest $request, Project $project)
     {
         // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
         $project = $project->load(['users.roles' => function($query) use ($project) {
@@ -103,7 +101,7 @@ class ProjectController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'User invited Successfully!'
-        ]);
+        ], 200);
     }
 
     public function removeMember(RemoveMemberRequest $request)
