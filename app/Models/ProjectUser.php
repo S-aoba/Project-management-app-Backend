@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectUser extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'project_id',
+        'user_id',
+        'role_id',
+    ];
     
     public function project()
     {
