@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
@@ -122,7 +123,32 @@ class ProjectController extends Controller
         }
     }
 
-    public function changeOfRole(ChangeRoleRequest $request) {
-        return 'change role';
+    public function changeOfRole(ChangeRoleRequest $request) 
+    {
+        try {
+            $adminId = Auth::id();
+            $projectId = $request->projectId();
+            
+            ProjectUser::where('project_id', $projectId)
+                            ->where('user_id', $adminId)
+                            ->update(['role_id' => 2]);
+    
+            // 対象のmemberをadminに変更
+            $newAdminId = $request->userId();
+            ProjectUser::where('project_id', $projectId)
+                            ->where('user_id', $newAdminId)
+                            ->update(['role_id' => 1]);
+            
+            return response()->json([
+                'status' => true,
+                'message' => 'Role updated Successfully!'
+            ], 200);
+            
+        } catch (\Illuminate\Database\QueryException $e) {
+            // データベースエラーが発生した場合
+            return response()->json([
+                'message' => 'システムエラーが発生しました。しばらく後に再度お試しください。'
+            ], 500);
+        }
     }
 }

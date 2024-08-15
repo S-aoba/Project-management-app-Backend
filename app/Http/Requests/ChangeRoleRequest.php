@@ -56,4 +56,14 @@ class ChangeRoleRequest extends FormRequest
             //
         ];
     }
+
+    public function projectId()
+    {
+        return intval($this->route('project_id'));
+    }
+
+    public function userId()
+    {
+        return intval($this->route('user_id'));
+    }
 }
