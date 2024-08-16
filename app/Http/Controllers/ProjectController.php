@@ -32,13 +32,24 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $project = Project::createProject($request);
-        
-        return response()->json([
-            'status' => true,
-            'message' => 'Project created Successfully!',
-            'data' => $project
-        ], 200);
+        try {
+            $validatedData = $request->validated();
+            
+            $project = Project::createProjectAndAssignAdmin($validatedData);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Project created Successfully!',
+                'data' => $project
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Project creation failed!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Project extends Model
 {
@@ -23,30 +24,38 @@ class Project extends Model
         'updated_by'
     ];
 
-    static function createProject(StoreProjectRequest $validatedData) {
-        $new_project = Project::create([
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'due_date' => $validatedData['due_date'],
-            'status' => $validatedData['status'],
-            'image_path' => $validatedData['image_path'],
-            'created_by' => Auth::id(),
-            'updated_by' => Auth::id(),
-        ]);
+    static function createProjectAndAssignAdmin(array $validatedData) {
+        try {
+            DB::beginTransaction();
 
-        $role = DB::table('roles')
-                ->where('name', 'admin')
-                ->first();
+            $newProject = Project::create([
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'],
+                'due_date' => $validatedData['due_date'],
+                'status' => $validatedData['status'],
+                'image_path' => $validatedData['image_path'],
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
+            ]);
+            
+            $role = Role::where('name', 'Admin')->first();
+            ProjectUser::create([
+                'project_id' => $newProject->id,
+                'user_id' => Auth::id(),
+                'role_id' => $role->id
+            ]);
+                        
+            DB::commit();
 
-        $project_user = [
-            'project_id' => $new_project->id,
-            'user_id' => Auth::id(),
-            'role_id' => $role->id
-        ];
+            return $newProject;
+        
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        DB::table('project_users')->insert($project_user);
-    
-        return $new_project;
+            Log::error('Project creation failed: ' . $e->getMessage());
+
+            throw $e;
+        }
     }
 
     public function users()
