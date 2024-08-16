@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class updateProjectRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

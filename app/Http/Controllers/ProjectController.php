@@ -7,7 +7,7 @@ use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\RemoveMemberRequest;
 use App\Http\Requests\ShowProjectRequest;
 use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\updateProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Support\Facades\Auth;
@@ -71,9 +71,9 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(updateProjectRequest $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->all());
+        // $project->update($request->all());
 
         return response()->json([
             'status' => true,
