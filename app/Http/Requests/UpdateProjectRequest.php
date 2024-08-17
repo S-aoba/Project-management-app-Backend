@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
-class updateProjectRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,9 +13,7 @@ class updateProjectRequest extends FormRequest
     public function authorize(): bool
     {
         // ProjectのAdminのみがこの操作を行えるようにする
-        $project = $this->route('project');
-        
-        return $this->user()->isAdmin($project);
+        return Gate::allows('update', $this->route('project'));
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\ProjectUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ShowProjectRequest extends FormRequest
 {
@@ -14,21 +15,7 @@ class ShowProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // 閲覧するユーザーがProjectに参加しているかどうか
-        $userId = Auth::id();
-        $projectId = $this->route('project')->id;
-        
-        $isJoined = ProjectUser::where('project_id', $projectId)
-                        ->where('user_id', $userId)
-                        ->exists();
-
-        if(!$isJoined) {
-            throw new HttpResponseException(response()->json([
-                'message' => 'このプロジェクトへのアクセス権限がありません。',
-            ], 422));
-        }
-
-        return true;
+        return Gate::allows('view', $this->route('project'));
     }
 
     /**

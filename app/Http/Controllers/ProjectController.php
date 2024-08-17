@@ -7,10 +7,11 @@ use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\RemoveMemberRequest;
 use App\Http\Requests\ShowProjectRequest;
 use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\updateProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -71,9 +72,9 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(updateProjectRequest $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->all());
+        $project->update($request->validated());
 
         return response()->json([
             'status' => true,
@@ -86,15 +87,16 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $res = $project->delete();
-
-        if ($res) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Project deleted Successfully'
-            ], 200);    
+        if(Gate::allows('delete', $project)){
+            $res = $project->delete();
+            
+            if ($res) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Project deleted Successfully'
+                ], 200);    
+            }
         }
-        
     }
 
 

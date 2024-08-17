@@ -61,7 +61,7 @@ class Project extends Model
     public function users()
     {
         // 関係: Project 多対多 User
-        return $this->belongsToMany(User::class, 'project_users');
+        return $this->belongsToMany(User::class, 'project_users')->withPivot('role_id');
     }
 
     public function roles()
