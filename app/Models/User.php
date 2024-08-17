@@ -31,7 +31,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'pivot'
     ];
 
     /**
@@ -61,10 +60,8 @@ class User extends Authenticatable
 
     public function isAdmin(Project $project) {        
         
-        $role = $project->roles[0]->name;
-
-        if($role === 'admin') return true;
-
-        return false;
+        $roleId = $project->users->where('id', Auth::id())->first()->pivot->role_id;
+        
+        return $roleId === 1;
     }
 }
