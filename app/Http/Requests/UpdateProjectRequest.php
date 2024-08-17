@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateProjectRequest extends FormRequest
 {
@@ -12,9 +13,7 @@ class UpdateProjectRequest extends FormRequest
     public function authorize(): bool
     {
         // ProjectのAdminのみがこの操作を行えるようにする
-        $project = $this->route('project');
-        
-        return $this->user()->isAdmin($project);
+        return Gate::allows('update', $this->route('project'));
     }
 
     /**

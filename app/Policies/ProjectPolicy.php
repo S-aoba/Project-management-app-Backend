@@ -22,7 +22,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return true;
+        return $user->isAdmin($project);
     }
 
     /**
