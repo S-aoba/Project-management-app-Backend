@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -86,15 +87,16 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $res = $project->delete();
-
-        if ($res) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Project deleted Successfully'
-            ], 200);    
+        if(Gate::allows('delete', $project)){
+            $res = $project->delete();
+            
+            if ($res) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Project deleted Successfully'
+                ], 200);    
+            }
         }
-        
     }
 
 
