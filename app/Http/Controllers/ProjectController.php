@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangeRoleRequest;
 use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\RemoveMemberRequest;
-use App\Http\Requests\ShowProjectRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -47,8 +48,8 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Project creation failed!',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
+                'error_code' => 500,
             ], 500);
         }
     }
@@ -56,17 +57,21 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ShowProjectRequest $request, Project $project)
-    {
+    public function show(Project $project)
+    {        
         // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
-        $project = $project->load(['users.roles' => function($query) use ($project) {
-            $query->where('project_id', $project->id)->select('name');
-        }, 'tasks']);
+        if(Gate::allows('view', $project)){
+            $project = $project->load(['users.roles' => function($query) use ($project) {
+                $query->where('project_id', $project->id)->select('name');
+            }, 'tasks']);
+    
+            return response()->json([
+                'status' => true,
+                'data' => $project
+            ], 200);
+        }
 
-        return response()->json([
-            'status' => true,
-            'data' => $project
-        ], 200);
+        abort(403, 'You are not authorized to view this project.');
     }
 
     /**
@@ -74,12 +79,24 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->validated());
+        try {
+            $res = $project->update($request->validated());
+    
+            if($res) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Project updated Successfully!'
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to delete project: ' . $e->getMessage());
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Project updated Successfully!'
-        ], 200);
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while updating the project.',
+                'error_code' => 500
+            ], 500);
+        }
     }
 
     /**
@@ -87,15 +104,27 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        if(Gate::allows('delete', $project)){
-            $res = $project->delete();
-            
-            if ($res) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Project deleted Successfully'
-                ], 200);    
+        try {
+            if(Gate::allows('delete', $project)){
+                $res = $project->delete();
+                
+                if ($res) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Project deleted Successfully'
+                    ], 200);    
+                }
             }
+    
+            abort(403, 'You are not authorized to destroy this project.');
+        } catch (\Exception $e) {
+            Log::error('Failed to delete project: ' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while deleting the project.',
+                'error_code' => 500
+            ], 500);
         }
     }
 

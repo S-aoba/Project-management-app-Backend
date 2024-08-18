@@ -32,4 +32,21 @@ class ProjectPolicy
     {
         return $user->isAdmin($project);
     }
+
+    public function inviteMember(User $user, Project $project, int $joinUserId): bool
+    {
+        $isAdmin = $user->isAdmin($project);
+
+        if(!$isAdmin) {
+            return false;
+        }
+
+        $isJoinedProject = ProjectUser::isJoinedProject($project, $joinUserId);
+        
+        if($isJoinedProject) {
+            return false;
+        }
+        
+        return true;
+    }
 }
