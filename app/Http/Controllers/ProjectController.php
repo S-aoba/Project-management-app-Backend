@@ -48,8 +48,8 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Project creation failed!',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
+                'error_code' => 500,
             ], 500);
         }
     }
@@ -106,8 +106,6 @@ class ProjectController extends Controller
     {
         try {
             if(Gate::allows('delete', $project)){
-                DB::beginTransaction();
-
                 $res = $project->delete();
                 
                 if ($res) {
@@ -116,19 +114,16 @@ class ProjectController extends Controller
                         'message' => 'Project deleted Successfully'
                     ], 200);    
                 }
-
-                DB::commit();
             }
     
             abort(403, 'You are not authorized to destroy this project.');
         } catch (\Exception $e) {
-            DB::rollBack();
-        
             Log::error('Failed to delete project: ' . $e->getMessage());
         
             return response()->json([
                 'status' => false,
-                'message' => 'An error occurred while deleting the project.'
+                'message' => 'An error occurred while deleting the project.',
+                'error_code' => 500
             ], 500);
         }
     }
