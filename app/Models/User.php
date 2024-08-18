@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\isNull;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -60,8 +62,12 @@ class User extends Authenticatable
 
     public function isAdmin(Project $project) {        
         
-        $roleId = $project->users->where('id', Auth::id())->first()->pivot->role_id;
+        $user = $project->users->where('id', Auth::id())->first();
+
+        if(is_null($user)) {
+            return false;
+        }
         
-        return $roleId === 1;
+        return $user->pivot->role_id === 1;
     }
 }

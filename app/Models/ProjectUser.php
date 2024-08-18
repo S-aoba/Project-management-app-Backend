@@ -29,4 +29,11 @@ class ProjectUser extends Model
     {
         return $this->belongsTo(Role::class);
     }
+
+    static function isJoinedProject(Project $project, int $userId)
+    {
+        return ProjectUser::where('project_id', $project->id)
+                        ->where('user_id', $userId)
+                        ->exists();
+    }
 }
