@@ -79,12 +79,24 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->validated());
+        try {
+            $res = $project->update($request->validated());
+    
+            if($res) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Project updated Successfully!'
+                ], 200);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to delete project: ' . $e->getMessage());
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Project updated Successfully!'
-        ], 200);
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while updating the project.',
+                'error_code' => 500
+            ], 500);
+        }
     }
 
     /**
