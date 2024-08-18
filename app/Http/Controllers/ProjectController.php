@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangeRoleRequest;
 use App\Http\Requests\InviteMemberRequest;
 use App\Http\Requests\RemoveMemberRequest;
-use App\Http\Requests\ShowProjectRequest;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -91,15 +92,32 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        if(Gate::allows('delete', $project)){
-            $res = $project->delete();
-            
-            if ($res) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Project deleted Successfully'
-                ], 200);    
+        try {
+            if(Gate::allows('delete', $project)){
+                DB::beginTransaction();
+
+                $res = $project->delete();
+                
+                if ($res) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Project deleted Successfully'
+                    ], 200);    
+                }
+
+                DB::commit();
             }
+    
+            abort(403, 'You are not authorized to destroy this project.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+        
+            Log::error('Failed to delete project: ' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while deleting the project.'
+            ], 500);
         }
     }
 
