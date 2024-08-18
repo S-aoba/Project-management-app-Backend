@@ -56,17 +56,21 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ShowProjectRequest $request, Project $project)
-    {
+    public function show(Project $project)
+    {        
         // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
-        $project = $project->load(['users.roles' => function($query) use ($project) {
-            $query->where('project_id', $project->id)->select('name');
-        }, 'tasks']);
+        if(Gate::allows('show', $project)){
+            $project = $project->load(['users.roles' => function($query) use ($project) {
+                $query->where('project_id', $project->id)->select('name');
+            }, 'tasks']);
+    
+            return response()->json([
+                'status' => true,
+                'data' => $project
+            ], 200);
+        }
 
-        return response()->json([
-            'status' => true,
-            'data' => $project
-        ], 200);
+        abort(403, 'You are not authorized to view this project.');
     }
 
     /**
