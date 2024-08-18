@@ -60,7 +60,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {        
         // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
-        if(Gate::allows('show', $project)){
+        if(Gate::allows('view', $project)){
             $project = $project->load(['users.roles' => function($query) use ($project) {
                 $query->where('project_id', $project->id)->select('name');
             }, 'tasks']);
