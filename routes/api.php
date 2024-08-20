@@ -12,14 +12,11 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 
-// Project
-Route::apiResource('/project', ProjectController::class)->middleware(['auth:sanctum']);
-Route::middleware(['auth:sanctum'])->get('/user/{user_id}/projects', [UserController::class, 'fetchUserProject']);
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::apiResources([
+        'project' => ProjectController::class,
+        'task' => TaskController::class
+    ]);
 
-// ProjectUser
-Route::apiResource('/project.user', ProjectUserController::class)->middleware([
-    'auth:sanctum'
-]);
-
-// Task
-Route::apiResource('/task', TaskController::class)->middleware(['auth:sanctum']);
+    Route::middleware(['auth:sanctum'])->get('/user/{user_id}/projects', [UserController::class, 'fetchUserProject']);
+});
