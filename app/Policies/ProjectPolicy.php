@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProjectPolicy
 {
@@ -33,20 +34,8 @@ class ProjectPolicy
         return $user->isAdmin($project);
     }
 
-    public function inviteMember(User $user, Project $project, int $joinUserId): bool
+    public function inviteMember(User $user, Project $project): bool
     {
-        $isAdmin = $user->isAdmin($project);
-
-        if(!$isAdmin) {
-            return false;
-        }
-
-        $isJoinedProject = ProjectUser::isJoinedProject($project, $joinUserId);
-        
-        if($isJoinedProject) {
-            return false;
-        }
-        
-        return true;
+        return $user->isAdmin($project);
     }
 }

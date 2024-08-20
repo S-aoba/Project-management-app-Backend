@@ -12,13 +12,8 @@ class InviteMemberRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
-        $projectId = $this->route('project_id');
-        $project = Project::findOrfail($projectId);
-        
-        $joinUserId = $this->input('user_id');
-        
-        return Gate::allows('inviteMember', [$project, $joinUserId]);
+    {        
+        return Gate::allows('inviteMember', $this->route('project'));
     }
 
     /**

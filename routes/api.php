@@ -15,7 +15,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResources([
         'project' => ProjectController::class,
-        'task' => TaskController::class
+        'task' => TaskController::class,
+        'project.user' => ProjectUserController::class
     ]);
 
     Route::middleware(['auth:sanctum'])->get('/user/{user_id}/projects', [UserController::class, 'fetchUserProject']);
