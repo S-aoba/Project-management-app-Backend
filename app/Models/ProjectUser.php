@@ -30,10 +30,27 @@ class ProjectUser extends Model
         return $this->belongsTo(Role::class);
     }
 
-    static function isJoinedProject(Project $project, int $userId)
+    private static function isUserAlreadyInProject(int $projectId, int $userId): bool
     {
-        return ProjectUser::where('project_id', $project->id)
-                        ->where('user_id', $userId)
-                        ->exists();
+        $exists = self::where('project_id', $projectId)
+                      ->where('user_id', $userId)
+                      ->exists();
+
+        return $exists;
+    }
+
+    public static function addUserToProject($projectId, $userId, $roleId)
+    {
+        $exists = self::isUserAlreadyInProject($projectId, $userId);
+
+        if ($exists) {
+            throw new \Exception('User is already a member of this project.');
+        }
+
+        return self::create([
+            'project_id' => $projectId,
+            'user_id' => $userId,
+            'role_id' => $roleId,
+        ]);
     }
 }

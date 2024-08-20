@@ -15,16 +15,18 @@ class ProjectUserController extends Controller
     public function store(InviteMemberRequest $request, Project $project)
     {
         try {
-            ProjectUser::create([
-                'project_id' => $project->id,
-                'user_id' => $request->validated()['user_id'],
-                'role_id' => 2,
-            ]);
+            
+            ProjectUser::addUserToProject($project->id, $request->validated()['user_id'], 2);
     
             return response()->json([
                 'message' => 'User invited Successfully!'
             ], 201);
             
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+
         } catch (\Illuminate\Database\QueryException $e) {
             
             return response()->json([
