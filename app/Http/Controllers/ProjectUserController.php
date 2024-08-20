@@ -6,7 +6,6 @@ use App\Http\Requests\InviteMemberRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProjectUserController extends Controller
 {
@@ -23,14 +22,12 @@ class ProjectUserController extends Controller
             ]);
     
             return response()->json([
-                'status' => true,
                 'message' => 'User invited Successfully!'
             ], 201);
             
         } catch (\Illuminate\Database\QueryException $e) {
             
             return response()->json([
-                'status' => false,
                 'message' => 'A system error has occurred. Please try again in a few moments.',
                 'error_code' => 500
             ], 500);
