@@ -3,19 +3,24 @@
 namespace App\Policies;
 
 use App\Models\Project;
-use App\Models\ProjectUser;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ProjectPolicy
-{
+class ProjectUserPolicy
+{  
     /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, Project $project): bool
     {
-        return $project->users->contains($user);
+        return true;
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function inviteMember(User $user, Project $project): bool
+    {
+        return $user->isAdmin($project);
     }
 
     /**
@@ -23,13 +28,18 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->isAdmin($project);
+        return true;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Project $project): bool
+    public function removeMember(User $user, Project $project): bool
+    {
+        return $user->isAdmin($project);
+    }
+
+    public function changeRole(User $user, Project $project): bool
     {
         return $user->isAdmin($project);
     }
