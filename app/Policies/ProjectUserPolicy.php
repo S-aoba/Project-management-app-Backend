@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProjectUserPolicy
 {  
@@ -35,8 +34,8 @@ class ProjectUserPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Project $project): bool
+    public function removeMember(User $user, Project $project): bool
     {
-        return true;
+        return $user->isAdmin($project);
     }
 }

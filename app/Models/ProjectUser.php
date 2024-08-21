@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectUser extends Model
 {
@@ -52,5 +53,22 @@ class ProjectUser extends Model
             'user_id' => $userId,
             'role_id' => $roleId,
         ]);
+    }
+
+    public static function removeUserToProject($projectId, $userId)
+    {
+        if(Auth::id() === $userId) {
+            throw new \Exception('Admin can not remove.');
+        }
+
+        $exists = self::isUserAlreadyInProject($projectId, $userId);
+
+        if(!$exists) {
+            throw new \Exception('User is not a member of this project.');
+        }
+
+        return self::where('project_id', $projectId)
+                    ->where('user_id', $userId)
+                    ->delete();
     }
 }

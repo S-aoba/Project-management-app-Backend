@@ -92,33 +92,4 @@ class ProjectController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Project $project)
-    {
-        try {
-            if(Gate::allows('delete', $project)){
-                $res = $project->delete();
-                
-                if ($res) {
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Project deleted Successfully'
-                    ], 200);    
-                }
-            }
-    
-            abort(403, 'You are not authorized to destroy this project.');
-        } catch (\Exception $e) {
-            Log::error('Failed to delete project: ' . $e->getMessage());
-        
-            return response()->json([
-                'status' => false,
-                'message' => 'An error occurred while deleting the project.',
-                'error_code' => 500
-            ], 500);
-        }
-    }
 }

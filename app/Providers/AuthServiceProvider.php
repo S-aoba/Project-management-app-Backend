@@ -22,5 +22,6 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('inviteMember', [ProjectUserPolicy::class, 'inviteMember']);
+        Gate::define('removeMember', [ProjectUserPolicy::class, 'removeMember']);
     }
 }

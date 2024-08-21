@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\InviteMemberRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectUserController extends Controller
 {
@@ -71,27 +73,29 @@ class ProjectUserController extends Controller
     /**
      * Remove the user to the project.
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project, User $user)
     {
-        // 一旦コメントアウト
-        // try {          
-        //     ProjectUser::where('project_id', $project->id)
-        //                     ->where('user_id', $)
-        //                     ->delete();
+        try {
+            if(Gate::allows('removeMember', $project)) {
+                ProjectUser::removeUserToProject($project->id, $user->id);
 
-            
-        //     return response()->json([
-        //         'status' => true,
-        //         'message' => 'Member deleted Successfully!',
-        //     ], 200);
+                return response()->json([
+                    'message' => 'Member removed Successfully!',
+                ], 200);
+            }
+
+            abort(400, 'This action is unauthorized.');
         
-        // } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+
+        } catch (\Illuminate\Database\QueryException $e) {
             
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'A system error has occurred. Please try again in a few moments.',
-        //         'error_code' => 500
-        //     ], 500);
-        // }
+            return response()->json([
+                'message' => 'A system error has occurred. Please try again in a few moments.'
+            ], 500);
+        }
     }
 }
