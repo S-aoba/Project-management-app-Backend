@@ -38,4 +38,9 @@ class ProjectUserPolicy
     {
         return $user->isAdmin($project);
     }
+
+    public function changeRole(User $user, Project $project): bool
+    {
+        return $user->isAdmin($project);
+    }
 }

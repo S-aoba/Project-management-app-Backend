@@ -6,7 +6,6 @@ use App\Http\Requests\InviteMemberRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ProjectUserController extends Controller
@@ -39,35 +38,31 @@ class ProjectUserController extends Controller
     }
 
     /**
-     * Update user role.
+     * Update the user role.
      */
-    public function update(Request $request, Project $project)
+    public function update(Project $project, User $user)
     {
-        // 一旦コメントアウト
-        // try {
-        //     $adminId = Auth::id();
-        //     $projectId = $request->projectId();
+        try {
+            if(Gate::allows('changeRole', $project)) {
+                ProjectUser::changeUserRole($project->id, $user->id);
+                
+                return response()->json([
+                    'message' => 'Role updated Successfully!'
+                ], 200);    
+            }
             
-        //     ProjectUser::where('project_id', $projectId)
-        //                     ->where('user_id', $adminId)
-        //                     ->update(['role_id' => 2]);
-    
-        //     $newAdminId = $request->userId();
-        //     ProjectUser::where('project_id', $projectId)
-        //                     ->where('user_id', $newAdminId)
-        //                     ->update(['role_id' => 1]);
+            abort(403, 'This action is unauthorized.');
             
-        //     return response()->json([
-        //         'status' => true,
-        //         'message' => 'Role updated Successfully!'
-        //     ], 200);
-            
-        // } catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
 
-        //     return response()->json([
-        //         'message' => 'システムエラーが発生しました。しばらく後に再度お試しください。'
-        //     ], 500);
-        // }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'message' => 'システムエラーが発生しました。しばらく後に再度お試しください。'
+            ], 500);
+        }
     }
 
     /**
@@ -84,7 +79,7 @@ class ProjectUserController extends Controller
                 ], 200);
             }
 
-            abort(400, 'This action is unauthorized.');
+            abort(403, 'This action is unauthorized.');
         
         } catch (\Exception $e) {
             return response()->json([

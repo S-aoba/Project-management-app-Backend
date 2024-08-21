@@ -23,5 +23,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         Gate::define('inviteMember', [ProjectUserPolicy::class, 'inviteMember']);
         Gate::define('removeMember', [ProjectUserPolicy::class, 'removeMember']);
+        Gate::define('changeRole', [ProjectUserPolicy::class, 'changeRole']);
     }
 }
