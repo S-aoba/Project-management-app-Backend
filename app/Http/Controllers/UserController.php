@@ -52,6 +52,10 @@ class UserController extends Controller
         // UserModelからログインユーザーが参加しているProjectの一覧を取得して返す
         $user = $request->user();
 
-        return $user->projects;
+        $projects = $user->projects;
+
+        return response()->json([
+            'data' => $projects
+        ]);
     }
 }
