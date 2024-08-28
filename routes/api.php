@@ -19,13 +19,16 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //         'project.user' => ProjectUserController::class
 //     ]);
 
-//     Route::middleware(['auth:sanctum'])->get('/user/{user_id}/projects', [UserController::class, 'fetchUserProject']);
 // });
 
 Route::apiResource('/projects', ProjectController::class)->only([
-   'store',
-   'show',
-   'update',
-   'destroy', 
-])->middleware(['auth:sanctum']);
-
+    'store',
+    'show',
+    'update',
+    'destroy', 
+    ])->middleware(['auth:sanctum']);
+    
+// TODO: Taskのエンドポイントを作成
+    
+Route::middleware(['auth:sanctum'])->get('/user/projects', [UserController::class, 'fetchUserProject']);
+    
