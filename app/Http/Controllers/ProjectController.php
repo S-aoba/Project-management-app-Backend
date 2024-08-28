@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -17,10 +18,7 @@ class ProjectController extends Controller
     {
         $projects = Project::all();
 
-        return response()->json([
-            'status' => true,
-            'data' => $projects
-        ]);
+        return ProjectResource::collection($projects);
     }
 
     /**
