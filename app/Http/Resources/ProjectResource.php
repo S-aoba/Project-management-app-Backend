@@ -16,6 +16,7 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
             'dueDate' => (new Carbon($this->due_date))->format('Y-m-d'),

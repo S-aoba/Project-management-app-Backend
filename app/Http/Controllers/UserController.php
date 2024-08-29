@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Http\Resources\ProjectResource;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -54,8 +54,6 @@ class UserController extends Controller
 
         $projects = $user->projects;
 
-        return response()->json([
-            'data' => $projects
-        ]);
+        return ProjectResource::collection($projects);
     }
 }
