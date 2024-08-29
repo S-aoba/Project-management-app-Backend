@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TaskResource;
+use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -49,8 +51,9 @@ class ProjectController extends Controller
             }, 'tasks']);
     
             return response()->json([
-                'status' => true,
-                'data' => $project
+                'project' => new ProjectResource($project),
+                'tasks' => TaskResource::collection($project['tasks']),
+                'users' => UserResource::collection($project['users'])
             ], 200);
         }
 
