@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TaskResource;
+use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $projects = Project::all();
@@ -21,9 +20,6 @@ class ProjectController extends Controller
         return ProjectResource::collection($projects);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProjectRequest $request)
     {
         try {
@@ -46,9 +42,6 @@ class ProjectController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Project $project)
     {        
         // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
@@ -58,8 +51,9 @@ class ProjectController extends Controller
             }, 'tasks']);
     
             return response()->json([
-                'status' => true,
-                'data' => $project
+                'project' => new ProjectResource($project),
+                'tasks' => TaskResource::collection($project['tasks']),
+                'users' => UserResource::collection($project['users'])
             ], 200);
         }
 
@@ -86,6 +80,32 @@ class ProjectController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while updating the project.',
+                'error_code' => 500
+            ], 500);
+        }
+    }
+
+    public function destroy(Project $project)
+    {
+        try {
+            if(Gate::allows('delete', $project)){
+                $res = $project->delete();
+
+                if ($res) {
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Project deleted Successfully'
+                    ], 200);    
+                }
+            }
+
+            abort(403, 'You are not authorized to destroy this project.');
+        } catch (\Exception $e) {
+            Log::error('Failed to delete project: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => 'An error occurred while deleting the project.',
                 'error_code' => 500
             ], 500);
         }
