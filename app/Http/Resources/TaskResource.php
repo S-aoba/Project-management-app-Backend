@@ -33,7 +33,7 @@ class TaskResource extends JsonResource
             'updatedBy' => $this->updated_by,
             'createdAt' => (new Carbon($this->created_at))->format('Y-m-d'),
             'updatedAt' => (new Carbon($this->updated_at))->format('Y-m-d'),
-            'assigned_user_id' => $this->assigned_user_id
+            'assignedUserId' => $this->assigned_user_id
         ];
     }
 }
