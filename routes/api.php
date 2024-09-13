@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -11,16 +10,6 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-// Route::group(['middleware' => 'auth:sanctum'], function () {
-//     Route::apiResources([
-//         'projects' => ProjectController::class,
-//         'task' => TaskController::class,
-//         'project.user' => ProjectUserController::class
-//     ]);
-
-// });
-
 Route::apiResource('/projects', ProjectController::class)->only([
     'store',
     'show',
@@ -28,7 +17,11 @@ Route::apiResource('/projects', ProjectController::class)->only([
     'destroy', 
     ])->middleware(['auth:sanctum']);
     
-// TODO: Taskのエンドポイントを作成
+Route::apiResource('/tasks', TaskController::class)->only([
+    'store',
+    'update',
+    'destroy'
+    ])->middleware(['auth:sanctum']);
     
 Route::middleware(['auth:sanctum'])->get('/user/projects', [UserController::class, 'fetchUserProject']);
     
