@@ -41,7 +41,7 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:projects,name',
+            'name' => 'required|string|max:255|unique:tasks,name',
             'description' => 'nullable|max:1000',
             'due_date' => 'required|date|after:today',
             'status' => 'required|in:pending,is_progress,completed',
