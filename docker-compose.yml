@@ -102,7 +102,6 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
-        mem_limit: 500m
 networks:
     sail:
         driver: bridge
