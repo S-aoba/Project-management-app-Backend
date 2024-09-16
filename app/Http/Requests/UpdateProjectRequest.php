@@ -35,18 +35,20 @@ class UpdateProjectRequest extends FormRequest
     public function messages(): array
     {
         return [
-            // 文言については要件等
-            'name.required' => 'Project名は必須項目です',
-            'name.string' => 'Project名には文字列を入力してください',
-            'name.max' => 'Project名の最大文字数は255文字です',
-            'name.unique' => 'プロジェクト名は既に存在しています',
-            'description.max' => 'ProjectのDescriptionの最大文字数は1000文字です',
-            'due_date.required' => '締日は必ず設定してください',
-            'due_date.date' => '締日の日付のフォーマットが正しくありません',
-            'due_date.after' => '締日の日付は、今日以降に設定してください',
-            'status.required' => 'ステータス項目は必須です',
-            'status.in' => '決められた項目の中で選択してください',
-            'image_path.string' => '所定のフォーマットに従ってください'
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a string.',
+            'name.min' => 'The name must be at least 1 character.',
+            'name.max' => 'The name may not be greater than 50 characters.',
+            
+            'description.max' => 'The description may not be greater than 1000 characters.',
+            
+            'due_date.date' => 'The due date must be a valid date.',
+            'due_date.after_or_equal' => 'The due date must be today or a future date.',
+            
+            'status.required' => 'The status field is required.',
+            'status.in' => 'The status must be one of the following: pending, is_progress, completed.',
+            
+            'image_path.string' => 'The image path must be a string.',
         ];
     }
 }
