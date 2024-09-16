@@ -42,26 +42,28 @@ class StoreTaskRequest extends FormRequest
     public function messages(): array
     {
         return [
-            // 文言については要件等
-            'name.required' => 'Project名は必須項目です',
-            'name.string' => 'Project名には文字列を入力してください',
-            'name.max' => 'Project名の最大文字数は255文字です',
-            'name.unique' => 'プロジェクト名は既に存在しています',
-            'description.max' => 'ProjectのDescriptionの最大文字数は1000文字です',
-            'due_date.required' => '締日は必ず設定してください',
-            'due_date.date' => '締日の日付のフォーマットが正しくありません',
-            'due_date.after' => '締日の日付は、今日以降に設定してください',
-            'status.required' => 'ステータス項目は必須です',
-            'status.in' => '決められた項目の中で選択してください',
-            'image_path.string' => '所定のフォーマットに従ってください',
-            'priority.required' => '優先度項目は必須です',
-            'priority.in' => '決められた項目の中で選択してください',
-            'assigned_user_id.required' => 'assigned_user_idは必須項目です',
-            'assigned_user_id.int' => 'assigned_user_idは数値のみです',
-            'assigned_user_id.exists' => 'userは存在しません',
-            'project_id.required' => 'project_idは必須項目です',
-            'project_id.int' => 'project_idは数値のみです',
-            'project_id.exists' => 'projectは存在しません',
+            'name.required' => 'The name field is required.',
+            'name.string' => 'The name must be a string.',
+            'name.min' => 'The name must be at least 1 character.',
+            'name.max' => 'The name may not be greater than 50 characters.',
+            
+            'description.max' => 'The description may not be greater than 1000 characters.',
+            
+            'due_date.date' => 'The due date must be a valid date.',
+            'due_date.after_or_equal' => 'The due date must be today or a future date.',
+            
+            'status.required' => 'The status field is required.',
+            'status.in' => 'The status must be one of the following: pending, is_progress, completed.',
+            
+            'image_path.string' => 'The image path must be a string.',
+            
+            'priority.required' => 'The priority field is required.',
+            'priority.in' => 'The priority must be one of the following: low, medium, high.',
+            
+            'assigned_user_id.required' => 'The assigned user ID field is required.',
+            'assigned_user_id.int' => 'The assigned user ID must be an integer.',
+            'assigned_user_id.exists' => 'The selected assigned user ID does not exist.',
         ];
     }
+
 }
