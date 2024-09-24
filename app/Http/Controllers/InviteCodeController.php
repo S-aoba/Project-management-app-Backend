@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShowInviteCodeRequest;
 use App\Http\Requests\StoreInviteCodeRequest;
 use App\Models\InviteCode;
-use Illuminate\Http\Request;
+use App\Models\ProjectUser;
+use DateTime;
+use Exception;
 
 class InviteCodeController extends Controller
 {
@@ -41,10 +44,36 @@ class InviteCodeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, InviteCode $inviteCode)
+    public function show(ShowInviteCodeRequest $request, InviteCode $inviteCode)
     {
-        return 'invited successfully.';
-    }
-
+        try {
+            // Invite codeの期限が切れていないか(期限を24時間に設定する)
+            $createdAt = $inviteCode['created_at'];
+            // 特定の日時を設定
+            $specificDate = new DateTime($createdAt);
+            // 現在の日時を取得
+            $currentDate = new DateTime();
     
+            // 差を計算
+            $interval = $currentDate->diff($specificDate);
+    
+            // 24時間が経過していないかを判定
+            if ($interval->days == 0 && $interval->h < 24) {
+                $projectId = $inviteCode['project_id'];
+                $userId = $request->input('userId');
+                
+                ProjectUser::addUserToProject($projectId, $userId, 2);
+    
+                return response()->json([
+                    'message' => 'Invite successfully.'
+                ]);
+            } else {
+                throw new Exception('This invite code is expired.', 410);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], $e->getCode());
+        }
+    }  
 }
