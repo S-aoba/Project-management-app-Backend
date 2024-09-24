@@ -46,7 +46,7 @@ class ProjectUser extends Model
         $exists = self::isUserAlreadyInProject($projectId, $userId);
 
         if ($exists) {
-            throw new \Exception('User is already a member of this project.');
+            throw new \Exception('User is already a member of this project.', 409);
         }
 
         return self::create([
