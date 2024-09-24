@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -24,4 +25,7 @@ Route::apiResource('/tasks', TaskController::class)->only([
     ])->middleware(['auth:sanctum']);
     
 Route::middleware(['auth:sanctum'])->get('/user/projects', [UserController::class, 'fetchUserProject']);
-    
+
+
+Route::middleware(['auth:sanctum'])->post('/invite_code', [InviteCodeController::class, 'store']);
+Route::middleware(['auth:sanctum'])->post('/invite_code/{invite_code}', [InviteCodeController::class, 'show']);
