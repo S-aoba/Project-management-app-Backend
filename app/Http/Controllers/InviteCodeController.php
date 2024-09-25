@@ -32,12 +32,11 @@ class InviteCodeController extends Controller
                 'message' => 'Generate invite code successfully.'
             ]);
 
-        } catch (\Error $e) {
+        } catch (\Exception $e) {
             // Invite codeの生成に失敗
             return response()->json([
-                'error' => $e,
-                'message' => 'Generate failed invite code. Please a little later, try again.'
-            ]);
+                'message' => 'Invite Code Generation Failed. Please a little later, try again.'
+            ], 500);
         }
     }
 
