@@ -65,7 +65,8 @@ class InviteCodeController extends Controller
                 ProjectUser::addUserToProject($projectId, $userId, 2);
     
                 return response()->json([
-                    'message' => 'Invite successfully.'
+                    'message' => 'Invite successfully.',
+                    'projectId' => $projectId
                 ]);
             } else {
                 throw new Exception('This invite code is expired.', 410);
