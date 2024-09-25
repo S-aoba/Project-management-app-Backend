@@ -62,6 +62,8 @@ class InviteCodeController extends Controller
                 $userId = $request->input('userId');
                 
                 ProjectUser::addUserToProject($projectId, $userId, 2);
+
+                $inviteCode->delete();
     
                 return response()->json([
                     'message' => 'Invite successfully.',
