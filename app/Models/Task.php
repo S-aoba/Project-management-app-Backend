@@ -30,17 +30,17 @@ class Task extends Model
     static function storeTask(StoreTaskRequest $validatedData): void
     {
         // project_idを使ってProjectが存在しているかどうかを判定
-        $projectId = $validatedData['project_id'];
+        $projectId = $validatedData['projectId'];
         
         if(!Project::find($projectId)) {
             throw new ModelNotFoundException('Project is not exist.');
         }
 
         // assigned_user_idとcreated_byが異なる場合のみユーザーの検証を行う
-        if($validatedData['assigned_user_id'] !== $validatedData['created_by'])
+        if($validatedData['assignedUserId'] !== $validatedData['created_by'])
         {
             // assign_user_idを使い、そのユーザーが存在しているかつ、タスクを作成するProjectへ参加しているかどうかを判定
-            $assignedUserId = $validatedData['assigned_user_id'];
+            $assignedUserId = $validatedData['assignedUserId'];
     
             // ユーザーが存在しているかを確認
             $user = User::find($assignedUserId);
@@ -60,12 +60,12 @@ class Task extends Model
         Task::create([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
-            'due_date' => $validatedData['due_date'],
+            'due_date' => $validatedData['dueDate'],
             'status' => $validatedData['status'],
-            'image_path' => $validatedData['image_path'],
+            'image_path' => $validatedData['imagePath'],
             'priority' => $validatedData['priority'],
-            'assigned_user_id' => $validatedData['assigned_user_id'],
-            'project_id' => $validatedData['project_id'],
+            'assigned_user_id' => $validatedData['assignedUserId'],
+            'project_id' => $validatedData['projectId'],
             'created_by' => Auth::id(),
             'updated_by' => Auth::id()
         ]);
