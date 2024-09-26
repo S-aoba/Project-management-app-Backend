@@ -106,7 +106,7 @@ class ProjectController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while deleting the project.',
-                'error_code' => 500
+                'errorCode' => 500
             ], 500);
         }
     }
