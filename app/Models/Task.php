@@ -40,10 +40,10 @@ class Task extends Model
         if($validatedData['assigned_user_id'] !== $validatedData['created_by'])
         {
             // assign_user_idを使い、そのユーザーが存在しているかつ、タスクを作成するProjectへ参加しているかどうかを判定
-            $assigned_user_id = $validatedData['assigned_user_id'];
+            $assignedUserId = $validatedData['assigned_user_id'];
     
             // ユーザーが存在しているかを確認
-            $user = User::find($assigned_user_id);
+            $user = User::find($assignedUserId);
             if(is_null($user)){
                 throw new ModelNotFoundException('User is not exist.');
             }
