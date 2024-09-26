@@ -37,7 +37,7 @@ class ProjectController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage(),
-                'error_code' => 500,
+                'errorCode' => 500,
             ], 500);
         }
     }
@@ -80,7 +80,7 @@ class ProjectController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while updating the project.',
-                'error_code' => 500
+                'errorCode' => 500
             ], 500);
         }
     }
@@ -106,7 +106,7 @@ class ProjectController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An error occurred while deleting the project.',
-                'error_code' => 500
+                'errorCode' => 500
             ], 500);
         }
     }

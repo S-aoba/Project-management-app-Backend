@@ -19,8 +19,8 @@ class UpdateTaskRequest extends FormRequest
          * 
          * */
         
-        $projectId = $this->input('project_id');
-        $assignedUserId = $this->input('assigned_user_id');
+        $projectId = $this->input('projectId');
+        $assignedUserId = $this->input('assignedUserId');
 
         $user = Auth::user();
         
@@ -43,11 +43,11 @@ class UpdateTaskRequest extends FormRequest
         return [
             'name' => 'required|string|min:1|max:50',
             'description' => 'nullable|max:1000',
-            'due_date' => 'nullable|date|after_or_equal:today',
+            'dueDate' => 'nullable|date|after_or_equal:today',
             'status' => 'required|in:pending,is_progress,completed',
-            'image_path' => 'nullable|string',
+            'imagePath' => 'nullable|string',
             'priority' => 'required|in:low,medium,high',
-            'assigned_user_id' => 'required|int|exists:users,id',
+            'assignedUserId' => 'required|int|exists:users,id',
         ];
     }
 
@@ -61,20 +61,20 @@ class UpdateTaskRequest extends FormRequest
             
             'description.max' => 'The description may not be greater than 1000 characters.',
             
-            'due_date.date' => 'The due date must be a valid date.',
-            'due_date.after_or_equal' => 'The due date must be today or a future date.',
+            'dueDate.date' => 'The due date must be a valid date.',
+            'dueDate.after_or_equal' => 'The due date must be today or a future date.',
             
             'status.required' => 'The status field is required.',
             'status.in' => 'The status must be one of the following: pending, is_progress, completed.',
             
-            'image_path.string' => 'The image path must be a string.',
+            'imagePath.string' => 'The image path must be a string.',
             
             'priority.required' => 'The priority field is required.',
             'priority.in' => 'The priority must be one of the following: low, medium, high.',
             
-            'assigned_user_id.required' => 'The assigned user ID field is required.',
-            'assigned_user_id.int' => 'The assigned user ID must be an integer.',
-            'assigned_user_id.exists' => 'The selected assigned user ID does not exist.',
+            'assignedUserId.required' => 'The assigned user ID field is required.',
+            'assignedUserId.int' => 'The assigned user ID must be an integer.',
+            'assignedUserId.exists' => 'The selected assigned user ID does not exist.',
         ];
     }
 }
