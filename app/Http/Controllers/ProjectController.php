@@ -37,7 +37,7 @@ class ProjectController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage(),
-                'error_code' => 500,
+                'errorCode' => 500,
             ], 500);
         }
     }

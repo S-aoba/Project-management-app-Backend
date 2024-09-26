@@ -33,9 +33,9 @@ class Project extends Model
             $newProject = Project::create([
                 'name' => $validatedData['name'],
                 'description' => $validatedData['description'],
-                'due_date' => $validatedData['due_date'],
+                'due_date' => $validatedData['dueDate'],
                 'status' => $validatedData['status'],
-                'image_path' => $validatedData['image_path'],
+                'image_path' => $validatedData['imagePath'],
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id(),
             ]);

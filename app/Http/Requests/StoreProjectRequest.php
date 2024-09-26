@@ -24,9 +24,9 @@ class StoreProjectRequest extends FormRequest
         return [
             'name' => 'required|string|min:1|max:50',
             'description' => 'nullable|max:1000',
-            'due_date' => 'nullable|date|after_or_equal:today',
+            'dueDate' => 'nullable|date|after_or_equal:today',
             'status' => 'required|in:pending,is_progress,completed',
-            'image_path' => 'nullable|string', 
+            'imagePath' => 'nullable|string', 
         ];
     }
 
@@ -40,13 +40,13 @@ class StoreProjectRequest extends FormRequest
             
             'description.max' => 'The description may not be greater than 1000 characters.',
             
-            'due_date.date' => 'The due date must be a valid date.',
-            'due_date.after_or_equal' => 'The due date must be today or a future date.',
+            'dueDate.date' => 'The due date must be a valid date.',
+            'dueDate.after_or_equal' => 'The due date must be today or a future date.',
             
             'status.required' => 'The status field is required.',
             'status.in' => 'The status must be one of the following: pending, is_progress, completed.',
             
-            'image_path.string' => 'The image path must be a string.',
+            'imagePath.string' => 'The image path must be a string.',
         ];
     }
 }
