@@ -9,19 +9,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    // TODO: Exceptionエラーについては具体的なエラー処理にするかを考える
     public function store(StoreTaskRequest $request)
     {
         try {
@@ -44,17 +31,6 @@ class TaskController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $task->update($request->all());
@@ -65,9 +41,6 @@ class TaskController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Task $task)
     {
         $res = $task->delete();
