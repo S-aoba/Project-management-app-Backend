@@ -8,6 +8,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\UserResource;
 use App\Models\Project;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -82,29 +83,26 @@ class ProjectController extends Controller
         }
     }
 
-    public function destroy(Project $project)
+    public function destroy(Request $request, Project $project)
     {
         try {
-            if(Gate::allows('delete', $project)){
-                $res = $project->delete();
-
-                if ($res) {
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Project deleted Successfully'
-                    ], 200);    
-                }
+            if($request->user()->cannot('delete', $project)){
+                throw new Exception('You are not authorized to destroy this project', 403);
+            }
+            
+            $res = $project->delete();
+            if ($res) {
+                return response()->json([
+                    'message' => 'Project deleted successfully'
+                ], 200);    
             }
 
-            abort(403, 'You are not authorized to destroy this project.');
         } catch (\Exception $e) {
             Log::error('Failed to delete project: ' . $e->getMessage());
 
             return response()->json([
-                'status' => false,
-                'message' => 'An error occurred while deleting the project.',
-                'errorCode' => 500
-            ], 500);
+                'message' => $e->getMessage(),
+            ],$e->getCode());
         }
     }
 }
