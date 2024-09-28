@@ -43,22 +43,28 @@ class ProjectController extends Controller
 
     public function show(Request $request, Project $project)
     {        
-        if($request->user()->cannot('view', $project)){
+        try {
+            if($request->user()->cannot('view', $project)){
+                throw new Exception('You are not authorized to view this project.', 403);
+            }
+    
+            $project = $project->load(['users.roles' => function($query) use ($project) {
+                $query->where('project_id', $project->id)->select('name');
+            }, 'tasks']);
+    
+            
             return response()->json([
-                'message' => 'You are not authorized to view this project.'
-            ], 403);
+                'project' => new ProjectResource($project),
+                'tasks' => TaskResource::collection($project['tasks']),
+                'users' => UserResource::collection($project['users'])
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to show project: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],$e->getCode());
         }
-
-        $project = $project->load(['users.roles' => function($query) use ($project) {
-            $query->where('project_id', $project->id)->select('name');
-        }, 'tasks']);
-
-        
-        return response()->json([
-            'project' => new ProjectResource($project),
-            'tasks' => TaskResource::collection($project['tasks']),
-            'users' => UserResource::collection($project['users'])
-        ], 200);
     }
 
     /**
