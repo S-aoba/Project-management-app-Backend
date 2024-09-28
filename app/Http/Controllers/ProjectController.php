@@ -8,6 +8,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\UserResource;
 use App\Models\Project;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
@@ -39,22 +40,24 @@ class ProjectController extends Controller
         }
     }
 
-    public function show(Project $project)
+    public function show(Request $request, Project $project)
     {        
-        // プロジェクトに関連するユーザーとそのプロジェクト内のロールをロード
-        if(Gate::allows('view', $project)){
-            $project = $project->load(['users.roles' => function($query) use ($project) {
-                $query->where('project_id', $project->id)->select('name');
-            }, 'tasks']);
-    
+        if($request->user()->cannot('view', $project)){
             return response()->json([
-                'project' => new ProjectResource($project),
-                'tasks' => TaskResource::collection($project['tasks']),
-                'users' => UserResource::collection($project['users'])
-            ], 200);
+                'message' => 'You are not authorized to view this project.'
+            ], 403);
         }
 
-        abort(403, 'You are not authorized to view this project.');
+        $project = $project->load(['users.roles' => function($query) use ($project) {
+            $query->where('project_id', $project->id)->select('name');
+        }, 'tasks']);
+
+        
+        return response()->json([
+            'project' => new ProjectResource($project),
+            'tasks' => TaskResource::collection($project['tasks']),
+            'users' => UserResource::collection($project['users'])
+        ], 200);
     }
 
     /**
