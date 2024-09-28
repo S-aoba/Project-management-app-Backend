@@ -28,17 +28,14 @@ class ProjectController extends Controller
             $project = Project::createProjectAndAssignAdmin($validatedData);
 
             return response()->json([
-                'status' => true,
-                'message' => 'Project created Successfully!',
-                'data' => $project
+                'data' => $project,
+                'message' => 'Project created successfully.'
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
-                'status' => false,
                 'message' => $e->getMessage(),
-                'errorCode' => 500,
-            ], 500);
+            ], $e->getCode());
         }
     }
 
