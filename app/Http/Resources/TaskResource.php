@@ -15,12 +15,6 @@ class TaskResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if(!$this->resource) {
-            return [
-                'message' => 'Task is not exists.'
-            ];
-        }
-
         return [
             'id' => $this->id,
             'name' => $this->name,
