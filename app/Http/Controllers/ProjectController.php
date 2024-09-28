@@ -10,18 +10,10 @@ use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
-    public function index()
-    {
-        $projects = Project::all();
-
-        return ProjectResource::collection($projects);
-    }
-
     public function store(StoreProjectRequest $request)
     {
         try {
