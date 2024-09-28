@@ -70,7 +70,7 @@ class ProjectController extends Controller
     
             if($res) {
                 return response()->json([
-                    'message' => 'Project updated Successfully!'
+                    'message' => 'Project updated successfully'
                 ], 200);
             }
         } catch (\Exception $e) {
