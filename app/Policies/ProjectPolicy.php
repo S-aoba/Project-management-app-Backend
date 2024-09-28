@@ -3,10 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Project;
-use App\Models\ProjectUser;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ProjectPolicy
 {

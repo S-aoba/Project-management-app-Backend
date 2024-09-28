@@ -8,19 +8,12 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\UserResource;
 use App\Models\Project;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
-    public function index()
-    {
-        $projects = Project::all();
-
-        return ProjectResource::collection($projects);
-    }
-
     public function store(StoreProjectRequest $request)
     {
         try {
@@ -42,22 +35,28 @@ class ProjectController extends Controller
 
     public function show(Request $request, Project $project)
     {        
-        if($request->user()->cannot('view', $project)){
+        try {
+            if($request->user()->cannot('view', $project)){
+                throw new Exception('You are not authorized to view this project.', 403);
+            }
+    
+            $project = $project->load(['users.roles' => function($query) use ($project) {
+                $query->where('project_id', $project->id)->select('name');
+            }, 'tasks']);
+    
+            
             return response()->json([
-                'message' => 'You are not authorized to view this project.'
-            ], 403);
+                'project' => new ProjectResource($project),
+                'tasks' => TaskResource::collection($project['tasks']),
+                'users' => UserResource::collection($project['users'])
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to show project: ' . $e->getMessage());
+
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],$e->getCode());
         }
-
-        $project = $project->load(['users.roles' => function($query) use ($project) {
-            $query->where('project_id', $project->id)->select('name');
-        }, 'tasks']);
-
-        
-        return response()->json([
-            'project' => new ProjectResource($project),
-            'tasks' => TaskResource::collection($project['tasks']),
-            'users' => UserResource::collection($project['users'])
-        ], 200);
     }
 
     /**
@@ -82,29 +81,26 @@ class ProjectController extends Controller
         }
     }
 
-    public function destroy(Project $project)
+    public function destroy(Request $request, Project $project)
     {
         try {
-            if(Gate::allows('delete', $project)){
-                $res = $project->delete();
-
-                if ($res) {
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Project deleted Successfully'
-                    ], 200);    
-                }
+            if($request->user()->cannot('delete', $project)){
+                throw new Exception('You are not authorized to destroy this project', 403);
+            }
+            
+            $res = $project->delete();
+            if ($res) {
+                return response()->json([
+                    'message' => 'Project deleted successfully'
+                ], 200);    
             }
 
-            abort(403, 'You are not authorized to destroy this project.');
         } catch (\Exception $e) {
             Log::error('Failed to delete project: ' . $e->getMessage());
 
             return response()->json([
-                'status' => false,
-                'message' => 'An error occurred while deleting the project.',
-                'errorCode' => 500
-            ], 500);
+                'message' => $e->getMessage(),
+            ],$e->getCode());
         }
     }
 }
