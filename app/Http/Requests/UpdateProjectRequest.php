@@ -12,8 +12,8 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // ProjectのAdminのみがこの操作を行えるようにする
-        return Gate::allows('update', $this->route('project'));
+        $project = $this->route('project');
+        return $this->user()->can('update', $project);
     }
 
     /**
@@ -51,4 +51,5 @@ class UpdateProjectRequest extends FormRequest
             'imagePath.string' => 'The image path must be a string.',
         ];
     }
+
 }
