@@ -74,7 +74,7 @@ class ProjectController extends Controller
                 ], 200);
             }
         } catch (\Exception $e) {
-            Log::error('Failed to delete project: ' . $e->getMessage());
+            Log::error('Failed to update project: ' . $e->getMessage());
 
             return response()->json([
                 'message' => 'An error occurred while updating the project.',
