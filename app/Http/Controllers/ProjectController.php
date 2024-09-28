@@ -70,7 +70,6 @@ class ProjectController extends Controller
     
             if($res) {
                 return response()->json([
-                    'status' => true,
                     'message' => 'Project updated Successfully!'
                 ], 200);
             }
@@ -78,9 +77,7 @@ class ProjectController extends Controller
             Log::error('Failed to delete project: ' . $e->getMessage());
 
             return response()->json([
-                'status' => false,
                 'message' => 'An error occurred while updating the project.',
-                'errorCode' => 500
             ], 500);
         }
     }
