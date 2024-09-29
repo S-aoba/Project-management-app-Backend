@@ -22,9 +22,7 @@ class StoreTaskRequest extends FormRequest
             return false;
         }
 
-        $user = Auth::user();
-
-        return $user->projects->where('id', $project->id)->isNotEmpty();
+        return $this->user()->can('checkJoinProject', $project);
     }
 
     /**
