@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Models\Project;
+use App\Models\User;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +16,7 @@ class StoreTaskRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
+    { 
         $projectId = $this->input('projectId');
         $project = Project::find($projectId);
 
@@ -22,7 +24,20 @@ class StoreTaskRequest extends FormRequest
             return false;
         }
 
-        return $this->user()->can('checkJoinProject', $project);
+        if(!$this->user()->can('checkJoinProject', $project))
+        {
+            return false;
+        }
+
+        $assignedUserId = $this->input('assignedUserId');
+        if($assignedUserId === $this->user()->id)
+        {
+            return true;
+        }
+        
+        $assignedUser = User::find($assignedUserId);
+
+        return $assignedUser->can('checkJoinProject', $project);
     }
 
     /**
