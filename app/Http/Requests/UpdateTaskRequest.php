@@ -48,6 +48,7 @@ class UpdateTaskRequest extends FormRequest
             'imagePath' => 'nullable|string',
             'priority' => 'required|in:low,medium,high',
             'assignedUserId' => 'required|int|exists:users,id',
+            'projectId' => 'required|int|exists:projects,id'
         ];
     }
 
@@ -75,6 +76,10 @@ class UpdateTaskRequest extends FormRequest
             'assignedUserId.required' => 'The assigned user ID field is required.',
             'assignedUserId.int' => 'The assigned user ID must be an integer.',
             'assignedUserId.exists' => 'The selected assigned user ID does not exist.',
+
+            'projectId.required' => 'The project ID field is required.',
+            'projectId.int' => 'The project ID must be an integer.',
+            'projectId.exists' => 'The selected project does not exist.',
         ];
     }
 }
