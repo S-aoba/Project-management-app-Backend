@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Project;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,13 +15,16 @@ class StoreTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // ユーザーがProjectに参加しているかどうかを判定
         $projectId = $this->input('projectId');
-        $user = Auth::user();
-        
-        $isJoinedProject = $user->projects->where('id', $projectId)->isNotEmpty();
+        $project = Project::find($projectId);
 
-        return $isJoinedProject; 
+        if(!$project) {
+            return false;
+        }
+
+        $user = Auth::user();
+
+        return $user->projects->where('id', $project->id)->isNotEmpty();
     }
 
     /**
@@ -71,5 +77,4 @@ class StoreTaskRequest extends FormRequest
             'projectId.exists' => 'The selected project does not exist.',
         ];
     }
-
 }
