@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -12,25 +13,25 @@ class UpdateTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        /**
-         * 認証条件
-         * updateするユーザーがProjectに参加しているかどうか 
-         * updateするユーザーとassigned_user_idが同一かどうか
-         * 
-         * */
-        
-        $projectId = $this->input('projectId');
-        $assignedUserId = $this->input('assignedUserId');
 
-        $user = Auth::user();
-        
-        if($assignedUserId !== $user->id) {
+        $assignedUserId = $this->input('assignedUserId');
+        if($assignedUserId !== $this->user()->id)
+        {
             return false;
         }
-         
-        $isJoinedProject = $user->projects->where('id', $projectId)->isNotEmpty();
 
-        return $isJoinedProject;
+        $projectId = $this->input('projectId');
+        $project = Project::find($projectId);
+        
+        if(!$project) {
+            return false;
+        }
+
+        if(!$this->user()->can('checkJoinProject', $project))
+        {
+            return false;
+        }
+        return true;
     }
 
     /**
