@@ -30,4 +30,9 @@ class ProjectPolicy
     {
         return $user->isAdmin($project);
     }
+
+    public function checkJoinProject(User $user, Project $project): bool
+    {
+        return $user->projects->contains('id', $project->id);
+    }
 }
