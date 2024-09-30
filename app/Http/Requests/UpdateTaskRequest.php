@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTaskRequest extends FormRequest
@@ -14,7 +13,7 @@ class UpdateTaskRequest extends FormRequest
     public function authorize(): bool
     {
 
-        $assignedUserId = $this->input('assignedUserId');
+        $assignedUserId = $this->route('task')['assigned_user_id'];
         if($assignedUserId !== $this->user()->id)
         {
             return false;
@@ -48,7 +47,6 @@ class UpdateTaskRequest extends FormRequest
             'status' => 'required|in:pending,is_progress,completed',
             'imagePath' => 'nullable|string',
             'priority' => 'required|in:low,medium,high',
-            'assignedUserId' => 'required|int|exists:users,id',
             'projectId' => 'required|int|exists:projects,id'
         ];
     }
@@ -74,10 +72,6 @@ class UpdateTaskRequest extends FormRequest
             'priority.required' => 'The priority field is required.',
             'priority.in' => 'The priority must be one of the following: low, medium, high.',
             
-            'assignedUserId.required' => 'The assigned user ID field is required.',
-            'assignedUserId.int' => 'The assigned user ID must be an integer.',
-            'assignedUserId.exists' => 'The selected assigned user ID does not exist.',
-
             'projectId.required' => 'The project ID field is required.',
             'projectId.int' => 'The project ID must be an integer.',
             'projectId.exists' => 'The selected project does not exist.',

@@ -23,6 +23,8 @@ Route::apiResource('/tasks', TaskController::class)->only([
     'update',
     'destroy'
     ])->middleware(['auth:sanctum']);
+
+Route::middleware(['auth:sanctum'])->patch('/tasks/{task}/assigned_user_id', [TaskController::class,'changeAssignedUserId']);
     
 Route::middleware(['auth:sanctum'])->get('/user/projects', [UserController::class, 'fetchUserProject']);
 
