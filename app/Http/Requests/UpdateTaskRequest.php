@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTaskRequest extends FormRequest
