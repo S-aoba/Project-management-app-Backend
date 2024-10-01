@@ -73,8 +73,12 @@ class ProjectUserController extends Controller
     public function destroy(Request $request, Project $project, User $user)
     {
         try {
-            if($request->user()->cannot('removeMember', $project)){
-                throw new Exception('unauthorized.');
+            if(!$request->user()->isAdmin($project)){
+                throw new Exception('Unauthorized.', 401);
+            }
+
+            if($request->user()->id === $user->id){
+                throw new Exception('Admin user can not removed.', 400);
             }
             
             if($user->cannot('checkJoinProject', $project)){
@@ -96,6 +100,5 @@ class ProjectUserController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
-        
     }
 }
