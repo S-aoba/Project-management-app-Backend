@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -31,3 +32,5 @@ Route::middleware(['auth:sanctum'])->get('/user/projects', [UserController::clas
 
 Route::middleware(['auth:sanctum'])->post('/invite_code', [InviteCodeController::class, 'store']);
 Route::middleware(['auth:sanctum'])->post('/invite_code/{invite_code}', [InviteCodeController::class, 'show']);
+
+Route::middleware(['auth:sanctum'])->delete('/projects/{project}/users/{user}', [ProjectUserController::class, 'destroy']);

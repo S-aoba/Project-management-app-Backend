@@ -56,55 +56,6 @@ class ProjectUser extends Model
         ]);
     }
 
-    public static function removeUserToProject($projectId, $userId)
-    {
-        if(Auth::id() === $userId) {
-            throw new \Exception('Admin can not remove.');
-        }
-
-        $exists = self::isUserAlreadyInProject($projectId, $userId);
-
-        if(!$exists) {
-            throw new \Exception('User is not a member of this project.');
-        }
-
-        return self::where('project_id', $projectId)
-                    ->where('user_id', $userId)
-                    ->delete();
-    }
-
-    /**
-     *  A: Admin, B:member, C:member, D:member
-     *  ユースケース: 想定としては単純にRoleの変更のみなので、Adminであるユーザーを削除することはない
-     *  AさんとBさんのロールを入れ替える
-     */
-    public static function changeUserRole($projectId, $targetUserId)
-    {
-        $adminUserId = Auth::id();
-
-        if($adminUserId === $targetUserId) {
-            throw new \Exception('Admin can not remove.');
-        }
-
-        $exists = self::isUserAlreadyInProject($projectId, $targetUserId);
-
-        if(!$exists) {
-            throw new \Exception('User is not a member of this project.');
-        }
-
-        DB::beginTransaction();
-
-        try {
-            self::updateUserRole($projectId, $adminUserId, 2);    
-            self::updateUserRole($projectId, $targetUserId, 1);    
-    
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-    }
 
     private static function updateUserRole(int $projectId, int $targetUserId, int $roleId): bool
     {
