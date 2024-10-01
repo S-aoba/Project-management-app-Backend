@@ -6,6 +6,8 @@ use App\Http\Requests\InviteMemberRequest;
 use App\Models\Project;
 use App\Models\ProjectUser;
 use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ProjectUserController extends Controller
@@ -68,29 +70,32 @@ class ProjectUserController extends Controller
     /**
      * Remove the user to the project.
      */
-    public function destroy(Project $project, User $user)
+    public function destroy(Request $request, Project $project, User $user)
     {
         try {
-            if(Gate::allows('removeMember', $project)) {
-                ProjectUser::removeUserToProject($project->id, $user->id);
-
-                return response()->json([
-                    'message' => 'Member removed Successfully!',
-                ], 200);
+            if($request->user()->cannot('removeMember', $project)){
+                throw new Exception('unauthorized.');
+            }
+            
+            if($user->cannot('checkJoinProject', $project)){
+                throw new Exception('The user to be deleted has not joined the project.', 403);
             }
 
-            abort(403, 'This action is unauthorized.');
-        
+            $res = ProjectUser::where('project_id', $project->id)
+                                ->where('user_id', $user->id)
+                                ->delete();
+
+            if($res) {
+                return response()->json([
+                    'message' => 'Member has been successfully removed from the project.'
+                ]);
+            }
+            
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage(),
-            ], 400);
-
-        } catch (\Illuminate\Database\QueryException $e) {
-            
-            return response()->json([
-                'message' => 'A system error has occurred. Please try again in a few moments.'
-            ], 500);
+                'message' => $e->getMessage()
+            ], $e->getCode());
         }
+        
     }
 }
