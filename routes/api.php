@@ -34,3 +34,5 @@ Route::middleware(['auth:sanctum'])->post('/invite_code', [InviteCodeController:
 Route::middleware(['auth:sanctum'])->post('/invite_code/{invite_code}', [InviteCodeController::class, 'show']);
 
 Route::middleware(['auth:sanctum'])->delete('/projects/{project}/users/{user}', [ProjectUserController::class, 'destroy']);
+
+Route::middleware(['auth:sanctum'])->patch('/projects/{project}/users/{user}/role',[ProjectUserController::class, 'update']);
