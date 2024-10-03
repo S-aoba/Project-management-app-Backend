@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Project;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
@@ -65,7 +66,16 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
         try {
-            $res = $project->update($request->validated());
+            $validatedData = $request->validated();
+            $res = $project->update([
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'],
+                'due_date' => $validatedData['dueDate'],
+                'status' => $validatedData['status'],
+                'image_path' => $validatedData['imagePath'],
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id()
+            ]);
     
             if($res) {
                 return response()->json([
