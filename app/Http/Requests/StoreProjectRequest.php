@@ -25,7 +25,7 @@ class StoreProjectRequest extends FormRequest
             'name' => 'required|string|min:1|max:50',
             'description' => 'nullable|max:1000',
             'dueDate' => 'nullable|date|after_or_equal:today',
-            'status' => 'required|in:pending,is_progress,completed',
+            'status' => 'required|in:pending,progress,completed',
             'imagePath' => 'nullable|string', 
         ];
     }
