@@ -13,9 +13,10 @@ Frontend Repository: [https://github.com/S-aoba/backend-PM-app
 | **Development Tool** | Laravel Tinker 2.9          |
 
 # Quick Start
-## Precondition
+### Precondition
 - Have Docker Desktop (https://www.docker.com/) or a similar Docker enviroment installed and running.
 
+### Setting Up
 1. Clone the Repository
 ```Bash
 git clone https://github.com/S-aoba/backend-PM-app.git
