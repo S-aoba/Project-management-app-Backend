@@ -16,9 +16,9 @@ Route::apiResource('/projects', ProjectController::class)->only([
     'store',
     'show',
     'update',
-    'destroy', 
+    'destroy',
     ])->middleware(['auth:sanctum']);
-    
+
 Route::apiResource('/tasks', TaskController::class)->only([
     'store',
     'update',
@@ -26,7 +26,7 @@ Route::apiResource('/tasks', TaskController::class)->only([
     ])->middleware(['auth:sanctum']);
 
 Route::middleware(['auth:sanctum'])->patch('/tasks/{task}/assigned_user_id', [TaskController::class,'changeAssignedUserId']);
-    
+
 Route::middleware(['auth:sanctum'])->get('/user/projects', [UserController::class, 'fetchUserProject']);
 
 
@@ -35,4 +35,4 @@ Route::middleware(['auth:sanctum'])->post('/invite_code/{invite_code}', [InviteC
 
 Route::middleware(['auth:sanctum'])->delete('/projects/{project}/users/{user}', [ProjectUserController::class, 'destroy']);
 
-Route::middleware(['auth:sanctum'])->patch('/projects/{project}/users/{user}/role',[ProjectUserController::class, 'update']);
+Route::middleware(['auth:sanctum'])->patch('/projects/{project}/users/{user}/role', [ProjectUserController::class, 'update']);
