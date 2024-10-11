@@ -54,7 +54,8 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "phpcs": "@php ./vendor/bin/phpcs",
-        "phpcf": "@php ./vendor/bin/php-cs-fixer fix"
+        "phpcf": "@php ./vendor/bin/php-cs-fixer fix",
+        "phpstan": "@php ./vendor/bin/phpstan analyze"
     },
     "extra": {
         "laravel": {
