@@ -13,7 +13,6 @@ class InviteMemberRequest extends FormRequest
     public function authorize(): bool
     {
         return Gate::allows('inviteMember', $this->route('project'));
-
     }
 
     /**

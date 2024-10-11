@@ -26,7 +26,6 @@ class ProjectController extends Controller
                 'data' => $project,
                 'message' => 'Project created successfully.'
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -104,7 +103,6 @@ class ProjectController extends Controller
                     'message' => 'Project deleted successfully'
                 ], 200);
             }
-
         } catch (\Exception $e) {
             Log::error('Failed to delete project: ' . $e->getMessage());
 

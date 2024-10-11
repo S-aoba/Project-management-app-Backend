@@ -50,5 +50,4 @@ class UpdateProjectRequest extends FormRequest
             'imagePath.string' => 'The image path must be a string.',
         ];
     }
-
 }

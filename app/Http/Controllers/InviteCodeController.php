@@ -31,7 +31,6 @@ class InviteCodeController extends Controller
                 'data' => $inviteCode,
                 'message' => 'Generate invite code successfully.'
             ]);
-
         } catch (\Exception $e) {
             // Invite codeの生成に失敗
             return response()->json([

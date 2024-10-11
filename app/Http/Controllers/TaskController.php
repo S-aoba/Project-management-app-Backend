@@ -72,7 +72,7 @@ class TaskController extends Controller
         }
     }
 
-    public function changeAssignedUserId(ChangeAssignedUserIdRequest  $request, Task $task)
+    public function changeAssignedUserId(ChangeAssignedUserIdRequest $request, Task $task)
     {
         try {
             $newAssignedUserId = $request->validated()['newAssignedUserId'];
@@ -96,7 +96,6 @@ class TaskController extends Controller
             return response()->json([
              'message' => 'Updated assignedUserId successfully!'
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()

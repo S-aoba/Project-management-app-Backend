@@ -48,7 +48,6 @@ class Project extends Model
             DB::commit();
 
             return $newProject;
-
         } catch (\Exception $e) {
             DB::rollBack();
 

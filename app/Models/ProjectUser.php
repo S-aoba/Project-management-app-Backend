@@ -63,5 +63,4 @@ class ProjectUser extends Model
                     ->where('user_id', $targetUserId)
                     ->update(['role_id' => $roleId]) > 0;
     }
-
 }

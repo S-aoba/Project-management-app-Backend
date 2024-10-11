@@ -47,5 +47,4 @@ class ChangeAssignedUserIdRequest extends FormRequest
             'newAssignedUserId.exists' => 'The selected new assigned user does not exist.',
         ];
     }
-
 }

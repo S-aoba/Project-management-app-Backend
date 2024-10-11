@@ -54,7 +54,7 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "phpcs": "@php ./vendor/bin/phpcs",
-        "phpcbf": "@php ./vendor/bin/phpcbf",
+        "phpcbf": "@php ./vendor/bin/phpcbf app/",
         "phpcff": "@php ./vendor/bin/php-cs-fixer fix",
         "phpcfc": "@php ./vendor/bin/php-cs-fixer check",
         "phpstan": "@php ./vendor/bin/phpstan analyze"

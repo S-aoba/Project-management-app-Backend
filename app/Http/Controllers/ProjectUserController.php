@@ -46,7 +46,6 @@ class ProjectUserController extends Controller
             return response()->json([
                 'message' => 'Change role successfully.'
             ], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -89,7 +88,6 @@ class ProjectUserController extends Controller
                     'message' => 'Member has been successfully removed from the project.'
                 ]);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
