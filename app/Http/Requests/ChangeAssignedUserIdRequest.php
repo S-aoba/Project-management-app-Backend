@@ -15,16 +15,15 @@ class ChangeAssignedUserIdRequest extends FormRequest
         $projcetId = $this->route('task')['project_id'];
         $project = Project::find($projcetId);
 
-        if(!$project)
-        {
+        if (!$project) {
             return false;
         }
-        
+
         $assignedUserId = $this->route('task')['assigned_user_id'];
-        if(!$this->user()->isAdmin($project) && $this->user()->id !== $assignedUserId){
+        if (!$this->user()->isAdmin($project) && $this->user()->id !== $assignedUserId) {
             return false;
         }
-        
+
         return true;
     }
 

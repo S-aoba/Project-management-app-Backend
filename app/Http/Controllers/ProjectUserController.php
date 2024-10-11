@@ -19,34 +19,34 @@ class ProjectUserController extends Controller
     public function update(Request $request, Project $project, User $user)
     {
         try {
-            if(!$request->user()->isAdmin($project)){
-                 throw new AuthorizationException('Unauthorized.', 403);
+            if (!$request->user()->isAdmin($project)) {
+                throw new AuthorizationException('Unauthorized.', 403);
             }
 
-            if($request->user()->id === $user->id) {
+            if ($request->user()->id === $user->id) {
                 throw new Exception('The admin role cannot be changed.', 403);
             }
 
-            if($user->cannot('checkJoinProject', $project)){
+            if ($user->cannot('checkJoinProject', $project)) {
                 throw new Exception('Target user is not in the project.', 403);
             }
 
             DB::beginTransaction();
-            
+
             ProjectUser::where('project_id', $project->id)
                         ->where('user_id', $request->user()->id)
                         ->update(['role_id' => 2]);
-            
+
             ProjectUser::where('project_id', $project->id)
                         ->where('user_id', $user->id)
                         ->update(['role_id' => 1]);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'message' => 'Change role successfully.'
             ], 200);
-       
+
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -55,7 +55,7 @@ class ProjectUserController extends Controller
             return response()->json([
                 'message' => $e->getMessage()
             ], $e->getCode());
-        } catch(AuthorizationException $e) {
+        } catch (AuthorizationException $e) {
             return response()->json([
                 'message' => $e->getMessage()
             ], $e->getCode());
@@ -68,15 +68,15 @@ class ProjectUserController extends Controller
     public function destroy(Request $request, Project $project, User $user)
     {
         try {
-            if(!$request->user()->isAdmin($project)){
+            if (!$request->user()->isAdmin($project)) {
                 throw new Exception('Unauthorized.', 401);
             }
 
-            if($request->user()->id === $user->id){
+            if ($request->user()->id === $user->id) {
                 throw new Exception('Admin user can not removed.', 400);
             }
-            
-            if($user->cannot('checkJoinProject', $project)){
+
+            if ($user->cannot('checkJoinProject', $project)) {
                 throw new Exception('The user to be deleted has not joined the project.', 403);
             }
 
@@ -84,12 +84,12 @@ class ProjectUserController extends Controller
                                 ->where('user_id', $user->id)
                                 ->delete();
 
-            if($res) {
+            if ($res) {
                 return response()->json([
                     'message' => 'Member has been successfully removed from the project.'
                 ]);
             }
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()

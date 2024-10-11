@@ -6,7 +6,7 @@ use App\Models\Project;
 use App\Models\User;
 
 class ProjectUserPolicy
-{  
+{
     /**
      * Determine whether the user can view the model.
      */

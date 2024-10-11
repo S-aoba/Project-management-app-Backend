@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -46,26 +47,27 @@ class User extends Authenticatable
         ];
     }
 
-    public function projects ()
+    public function projects()
     {
         // 関係: User 多対多 Project
         return $this->belongsToMany(Project::class, 'project_users');
     }
 
-    public function roles ()
+    public function roles()
     {
         // 関係: User 多対多 Role
         return $this->belongsToMany(Role::class, 'project_users');
     }
 
-    public function isAdmin(Project $project) {        
-        
+    public function isAdmin(Project $project)
+    {
+
         $user = $project->users->where('id', Auth::id())->first();
 
-        if(is_null($user)) {
+        if (is_null($user)) {
             return false;
         }
-        
+
         return $user->pivot->role_id === 1;
     }
 }

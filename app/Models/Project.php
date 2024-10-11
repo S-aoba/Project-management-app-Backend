@@ -23,7 +23,8 @@ class Project extends Model
         'updated_by'
     ];
 
-    static function createProjectAndAssignAdmin(array $validatedData) {
+    public static function createProjectAndAssignAdmin(array $validatedData)
+    {
         try {
             DB::beginTransaction();
 
@@ -36,18 +37,18 @@ class Project extends Model
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id(),
             ]);
-            
+
             $role = Role::where('name', 'Admin')->first();
             ProjectUser::create([
                 'project_id' => $newProject->id,
                 'user_id' => Auth::id(),
                 'role_id' => $role->id
             ]);
-                        
+
             DB::commit();
 
             return $newProject;
-        
+
         } catch (\Exception $e) {
             DB::rollBack();
 

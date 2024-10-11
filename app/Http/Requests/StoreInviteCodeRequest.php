@@ -23,7 +23,7 @@ class StoreInviteCodeRequest extends FormRequest
 
         // アクションを起こしたユーザーがProjectのadminであるかどうかの検証
         $isAdmin = $this->user()->isAdmin($project);
-        if(!$isAdmin) {
+        if (!$isAdmin) {
             return false;
         }
 

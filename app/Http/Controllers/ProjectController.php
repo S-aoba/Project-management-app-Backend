@@ -19,7 +19,7 @@ class ProjectController extends Controller
     {
         try {
             $validatedData = $request->validated();
-            
+
             $project = Project::createProjectAndAssignAdmin($validatedData);
 
             return response()->json([
@@ -35,17 +35,17 @@ class ProjectController extends Controller
     }
 
     public function show(Request $request, Project $project)
-    {        
+    {
         try {
-            if($request->user()->cannot('view', $project)){
+            if ($request->user()->cannot('view', $project)) {
                 throw new Exception('You are not authorized to view this project.', 403);
             }
-    
-            $project = $project->load(['users.roles' => function($query) use ($project) {
+
+            $project = $project->load(['users.roles' => function ($query) use ($project) {
                 $query->where('project_id', $project->id)->select('name');
             }, 'tasks']);
-    
-            
+
+
             return response()->json([
                 'project' => new ProjectResource($project),
                 'tasks' => TaskResource::collection($project['tasks']),
@@ -56,7 +56,7 @@ class ProjectController extends Controller
 
             return response()->json([
                 'message' => $e->getMessage(),
-            ],$e->getCode());
+            ], $e->getCode());
         }
     }
 
@@ -76,8 +76,8 @@ class ProjectController extends Controller
                 'created_by' => Auth::id(),
                 'updated_by' => Auth::id()
             ]);
-    
-            if($res) {
+
+            if ($res) {
                 return response()->json([
                     'message' => 'Project updated successfully'
                 ], 200);
@@ -94,15 +94,15 @@ class ProjectController extends Controller
     public function destroy(Request $request, Project $project)
     {
         try {
-            if($request->user()->cannot('delete', $project)){
+            if ($request->user()->cannot('delete', $project)) {
                 throw new Exception('You are not authorized to destroy this project', 403);
             }
-            
+
             $res = $project->delete();
             if ($res) {
                 return response()->json([
                     'message' => 'Project deleted successfully'
-                ], 200);    
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -110,7 +110,7 @@ class ProjectController extends Controller
 
             return response()->json([
                 'message' => $e->getMessage(),
-            ],$e->getCode());
+            ], $e->getCode());
         }
     }
 }

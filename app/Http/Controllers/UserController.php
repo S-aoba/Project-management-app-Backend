@@ -47,7 +47,7 @@ class UserController extends Controller
         //
     }
 
-    public function fetchUserProject(Request $request) 
+    public function fetchUserProject(Request $request)
     {
         // UserModelからログインユーザーが参加しているProjectの一覧を取得して返す
         $user = $request->user();

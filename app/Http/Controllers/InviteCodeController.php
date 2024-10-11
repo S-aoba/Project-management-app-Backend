@@ -52,19 +52,19 @@ class InviteCodeController extends Controller
             $specificDate = new DateTime($createdAt);
             // 現在の日時を取得
             $currentDate = new DateTime();
-    
+
             // 差を計算
             $interval = $currentDate->diff($specificDate);
-    
+
             // 24時間が経過していないかを判定
             if ($interval->days == 0 && $interval->h < 24) {
                 $projectId = $inviteCode['project_id'];
                 $userId = $request->input('userId');
-                
+
                 ProjectUser::addUserToProject($projectId, $userId, 2);
 
                 $inviteCode->delete();
-    
+
                 return response()->json([
                     'message' => 'Invite successfully.',
                     'projectId' => $projectId
@@ -77,5 +77,5 @@ class InviteCodeController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
-    }  
+    }
 }

@@ -16,7 +16,7 @@ class ProjectUser extends Model
         'user_id',
         'role_id',
     ];
-    
+
     public function project()
     {
         return $this->belongsTo(Project::class);
@@ -27,7 +27,7 @@ class ProjectUser extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function role ()
+    public function role()
     {
         return $this->belongsTo(Role::class);
     }
@@ -65,4 +65,3 @@ class ProjectUser extends Model
     }
 
 }
-

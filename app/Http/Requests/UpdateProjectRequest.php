@@ -27,7 +27,7 @@ class UpdateProjectRequest extends FormRequest
             'description' => 'nullable|max:1000',
             'dueDate' => 'nullable|date|after_or_equal:today',
             'status' => 'required|in:pending,progress,completed',
-            'imagePath' => 'nullable|string', 
+            'imagePath' => 'nullable|string',
         ];
     }
 
@@ -38,15 +38,15 @@ class UpdateProjectRequest extends FormRequest
             'name.string' => 'The name must be a string.',
             'name.min' => 'The name must be at least 1 character.',
             'name.max' => 'The name may not be greater than 50 characters.',
-            
+
             'description.max' => 'The description may not be greater than 1000 characters.',
-            
+
             'dueDate.date' => 'The due date must be a valid date.',
             'dueDate.after_or_equal' => 'The due date must be today or a future date.',
-            
+
             'status.required' => 'The status field is required.',
             'status.in' => 'The status must be one of the following: pending, is_progress, completed.',
-            
+
             'imagePath.string' => 'The image path must be a string.',
         ];
     }
