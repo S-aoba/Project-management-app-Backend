@@ -1,7 +1,7 @@
 # Project Management app / Backend
 >  This app is designed to help teams effectively plan, execute, and track their projects in a user-friendly environment. Whether you’re working on small tasks or large-scale projects, this app provides the necessary tools to enhance collaboration and streamline workflows.
 
-Frontend Repository: [https://github.com/S-aoba/backend-PM-app
+Frontend Repository: [https://github.com/S-aoba/Project-management-app-Frontend
 ](https://github.com/S-aoba/frontend-PM-app?tab=readme-ov-file)
 
 ## Key Stack
